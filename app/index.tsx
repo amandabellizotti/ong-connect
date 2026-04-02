@@ -1,6 +1,9 @@
 import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { useRouter } from 'expo-router'; // Importa o hook useRouter para navegação
 
 export default function Index() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <View style={styles.topo}>
@@ -21,15 +24,21 @@ export default function Index() {
         <Text style={styles.buttonText}>Realize Doações</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} 
-      onPress={() => console.log('Acompanhe Eventos pressionado!')} >
-        <Text style={styles.buttonText}>Acompanhe Eventos</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            console.log('Acompanhe Eventos pressionado!');
+          }}
+        >
+          <Text style={styles.buttonText}>Acompanhe Eventos</Text>
         </TouchableOpacity>
         
         </View>
         
-         <TouchableOpacity style={styles.inLine} 
-      onPress={() => console.log('Botão conectar pressionado!')} >
+         <TouchableOpacity 
+      onPress={() => {router.push('/login');
+      console.log('Botão conectar pressionado!');
+      }}>
 
         <Text style={styles.inLineText}>conectar-se</Text>
         </TouchableOpacity>
@@ -47,7 +56,6 @@ const styles = StyleSheet.create ({
   },
 
   topo: {
-    marginTop: 50,
     marginBottom: 50,
     alignItems: "center"
   },
@@ -78,7 +86,7 @@ const styles = StyleSheet.create ({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 8,
-    marginBottom: 10,
+    marginBottom: 5,
   },
 
   buttonText: {
@@ -86,10 +94,6 @@ const styles = StyleSheet.create ({
     fontSize: 12,
     fontWeight: "bold",
     textAlign: "center",
-  },
-
-  inLine: {
-    
   },
 
   inLineText: {
