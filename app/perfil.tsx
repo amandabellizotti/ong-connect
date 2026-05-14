@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+
 import {
     View,
     Text,
@@ -22,14 +23,42 @@ export default function Perfil({ route, navigation }: Props) {
     const userName = route.params?.userName || 'Visitante';
     const voluntarioId = route.params?.voluntarioId || 'ID-0';
 
+    const [interesse, setInteresse] = useState('Nenhum definido');
+
+    const editarInteresses = () => {
+        Alert.alert(
+            'Escolha uma causa',
+            'Qual área você prefere ajudar?',
+            [
+                {
+                    text: 'Educação',
+                    onPress: () => setInteresse('Educação'),
+                },
+                {
+                    text: 'Meio Ambiente',
+                    onPress: () => setInteresse('Meio Ambiente'),
+                },
+                {
+                    text: 'Saúde',
+                    onPress: () => setInteresse('Saúde'),
+                },
+                {
+                    text: 'Cancelar',
+                    style: 'cancel',
+                },
+            ]
+        );
+    };
+
     const handleLogout = () => {
         Alert.alert('Sair', 'Tem certeza que deseja sair?', [
             { text: 'Cancelar', style: 'cancel' },
-            { text: 'Sair', style: 'destructive', onPress: () => navigation.reset({ index: 0, routes: [{ name: 'Login' as any}], }) },
+            { text: 'Sair', style: 'destructive', onPress: () => navigation.reset({ index: 0, routes: [{ name: 'Login' as any }], }) },
         ]);
     };
 
     return (
+
 
         <View style={styles.container}>
             <Text style={styles.title}>Perfil de {userName}</Text>
@@ -37,14 +66,26 @@ export default function Perfil({ route, navigation }: Props) {
                 <Text style={styles.infoText}>Nome: {userName}</Text>
                 <Text style={styles.infoText}>Email: {userName.toLowerCase()}@exemplo.com</Text>
                 <Text style={styles.infoText}>Voluntário: {voluntarioId}</Text>
+                <Text style={styles.infoText}>Interesse: {interesse}
+                </Text>
             </View>
 
-            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>   
+            <TouchableOpacity
+                style={styles.editButton}
+                onPress={editarInteresses}
+            >
+                <Text style={styles.editButtonText}>
+                    Editar Interesses
+                </Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                 <Text style={styles.logoutButtonText}>Sair</Text>
             </TouchableOpacity>
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -81,6 +122,29 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     logoutButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    editButton: {
+        backgroundColor: '#A06AB9',
+        paddingVertical: 10,
+        paddingHorizontal: 30,
+        borderRadius: 8,
+        marginBottom: 15,
+
+        elevation: 4,
+
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+    },
+
+    editButtonText: {
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',

@@ -63,7 +63,7 @@ function TabNavigator({ route }: any) {
 
       <Tab.Screen
         name="Explorar"
-        component={explorar}
+        component={explorar as any}
         initialParams={{ userName, voluntarioId }}
       />
 

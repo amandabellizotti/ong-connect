@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     View,
     Text,
@@ -7,6 +7,8 @@ import {
     Image,
     ActivityIndicator,
     Dimensions,
+    TouchableOpacity,
+    Alert,
 } from 'react-native';
 
 import { CompositeScreenProps } from '@react-navigation/native';
@@ -25,6 +27,7 @@ type ONG = {
     id: string;
     nome: string;
     causa: string;
+    descricao: string;
     imagem: any;
 };
 
@@ -34,39 +37,52 @@ const ongs: ONG[] = [
         id: '1',
         nome: 'Amigos da Natureza',
         causa: 'Proteção ambiental',
+        descricao: 'ONG dedicada à preservação das florestas e educação ambiental.',
         imagem: require('../assets/images/logo-ong.png'),
     },
     {
         id: '2',
         nome: 'Sorrisos do Futuro',
         causa: 'Educação infantil',
+        descricao: 'Ajuda crianças em situação de vulnerabilidade através da educação.',
         imagem: require('../assets/images/logo-ong.png'),
     },
     {
         id: '3',
         nome: 'Mãos Solidárias',
         causa: 'Apoio a famílias carentes',
+        descricao: 'Distribui alimentos e apoio para famílias carentes.',
         imagem: require('../assets/images/logo-ong.png'),
     },
     {
         id: '4',
         nome: 'Vida Animal',
         causa: 'Resgate de animais',
+        descricao: 'Resgata e cuida de animais abandonados.',
         imagem: require('../assets/images/logo-ong.png'),
     },
 ];
 
 // COMPONENTE SEPARADO
 function ONGCard({ ong }: { ong: ONG }) {
+   
+    const mostrarDetalhes = () => {
+        Alert.alert(
+            ong.nome,
+            ong.descricao,
+            [{ text: 'Fechar' }]
+        );
+    };
+    
     return (
-        <View style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={mostrarDetalhes}>
             <Image source={ong.imagem} style={styles.imagem} />
 
             <View style={styles.infoContainer}>
                 <Text style={styles.nome}>{ong.nome}</Text>
                 <Text style={styles.causa}>{ong.causa}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }
 
