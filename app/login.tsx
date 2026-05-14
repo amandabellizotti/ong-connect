@@ -1,26 +1,50 @@
 import { Text, View, Image, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from 'react'; // importar o useState
 
-export default function Login() {
+import{ NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from './types/navigation';
+
+type Props = NativeStackScreenProps<RootStackParamList, 'login' >;
+
+export default function Login({ navigation} : Props) {
+    const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
 
-    const handleLogin = () => {
-        console.table({ email, senha }); // Exibir os valores em uma tabela
-
-        if (email.includes('@') && senha.length > 6) {
-            console.log("✅ Acesso autorizado para:", email);
-            // Futuramente: Navegar para a Home
+   const handleLogin = () => {
+    console.log("Valores atuais:", { nome, email, senha });
+        // 2. Valide se o nome não está vazio
+        if (nome.trim() !== '' && email.includes('@') && senha.length >= 6) {
+            // 3. Realize a navegação para 'dashboard' enviando nome e ID aleatório
+            navigation.navigate('dashboard', {  
+                voluntarioId: 'ID-' + Math.floor(Math.random() * 10000).toString(),
+                userName: nome // Envia o nome capturado
+            });
+            console.log("✅ Navegando para Dashboard com:", nome);
         } else {
-            console.log("❌ Falha no login: E-mail inválido ou senha muito curta.");
+            alert("Por favor, digite o nome do voluntário.");
+            console.log("❌ Falha no login: Nome vazio.");
         }
-    };
+    }
 
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Tela de Login</Text>
             <Image source={require("../assets/images/logo-ong.png")} style={styles.img} />
             <View style={styles.cadastro}>
+                {email.length > 0 && (
+                    <Text style={styles.textoAjuda}>
+                        Logando como: {email}
+                    </Text>
+                )}
+
+                <TextInput style={styles.input} 
+                placeholder="Nome do Voluntário" 
+                value={nome} 
+                onChangeText={setNome} 
+                placeholderTextColor={"#ccc"} 
+                 />
+
                 <TextInput style={styles.input} 
                 placeholder="Email" 
                 value={email} 
@@ -30,11 +54,6 @@ export default function Login() {
                 keyboardType="email-address"/>
 
 
-            {email.length > 0 && (
-                <Text style={styles.textoAjuda}>
-                    Logando como: {email}
-                </Text>
-            )}
                 <TextInput style={styles.input} 
                 placeholder="Senha" 
                 value={senha} 
@@ -42,6 +61,7 @@ export default function Login() {
                 placeholderTextColor={"#ccc"} 
                 secureTextEntry={true} />
             </View>
+
             <TouchableOpacity style={styles.botao} onPress={handleLogin}>
                 <Text style={styles.botaoText}>Entrar</Text>
             </TouchableOpacity>

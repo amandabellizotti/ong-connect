@@ -1,105 +1,96 @@
-import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { useRouter } from 'expo-router'; // Importa o hook useRouter para navegação
+import React from 'react';
+import { Platform } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function Index() {
-  const router = useRouter();
+import { RootStackParamList, TabParamList } from './types/navigation';
+
+import login from './login';
+import dashboard from './dashboard';
+import perfil from './perfil';
+import explorar from './explorar';
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<TabParamList>();
+
+function TabNavigator({ route }: any) {
+  const userName =
+    route?.params?.userName || 'Voluntário';
+
+  const voluntarioId =
+    route?.params?.voluntarioId || 'ID-0';
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topo}>
-        <Image source={require("../assets/images/logo-ong.png")} style={styles.img}/>
-        
-      <Text style={styles.textONG}>Nossa conexão é o ponto de partida para o futuro de alguém</Text>
-    </View>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarActiveTintColor: '#6A3093',
+        tabBarInactiveTintColor: 'gray',
+        tabBarStyle: {
+          height: Platform.OS === 'ios' ? 90 : 70,
+        },
 
+        // nao tava funcionando com o codigo do arquivo pet
+        tabBarIcon: ({ color, size, focused }) => {
+          let iconName: any;
 
-    <View style={styles.buttons}>
-     <TouchableOpacity style={styles.button} 
-      onPress={() => console.log('Botão Conhecer Projetos pressionado!')} >
-        <Text style={styles.buttonText}>Conhecer Projetos</Text>
-        </TouchableOpacity>
-         
-         <TouchableOpacity style={styles.button} 
-      onPress={() => console.log('Botão Doações pressionado!')} >
-        <Text style={styles.buttonText}>Realize Doações</Text>
-        </TouchableOpacity>
+          if (route.name === 'Dashboard') {
+            iconName = focused ? 'home' : 'home-outline';
+          } 
+          else if (route.name === 'Explorar') {
+            iconName = focused ? 'search' : 'search-outline';
+          } 
+          else if (route.name === 'Perfil') {
+            iconName = focused ? 'person' : 'person-outline';
+          }
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            console.log('Acompanhe Eventos pressionado!');
-          }}
-        >
-          <Text style={styles.buttonText}>Acompanhe Eventos</Text>
-        </TouchableOpacity>
-        
-        </View>
-        
-         <TouchableOpacity 
-      onPress={() => {router.push('/login');
-      console.log('Botão conectar pressionado!');
-      }}>
+          return (
+            <Ionicons
+              name={iconName}
+              size={size}
+              color={color}
+            />
+          );
+        },
+      })}
+    >
+      <Tab.Screen
+        name="Dashboard"
+        component={dashboard}
+        initialParams={{ userName, voluntarioId }}
+      />
 
-        <Text style={styles.inLineText}>conectar-se</Text>
-        </TouchableOpacity>
-        
-    </View>
+      <Tab.Screen
+        name="Explorar"
+        component={explorar}
+        initialParams={{ userName, voluntarioId }}
+      />
+
+      <Tab.Screen
+        name="Perfil"
+        component={perfil}
+        initialParams={{ userName, voluntarioId }}
+      />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create ({
-  container: {
-    flex: 1,
-    backgroundColor: "#d4b3e27a",
-    alignItems: "center",
-    justifyContent: "center"
-  },
+export default function App() {
+  return (
+    <Stack.Navigator
+      initialRouteName="login"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen
+        name="login"
+        component={login}
+      />
 
-  topo: {
-    marginBottom: 50,
-    alignItems: "center"
-  },
-
-  textONG: {
-    textAlign: "center",
-    color: "#8e5fb0ff",
-    fontWeight: "bold",
-    fontSize: 12,
-    marginLeft: 10,
-    marginRight: 10
-  },
-
-  img: {
-    width: 150,
-    height: 150,
-    display: "flex"
-  },
-
-  buttons: {
-    margin: 20,
-  },
-
-  button: {
-    backgroundColor: "#A06AB9",
-    width: 150,
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 8,
-    marginBottom: 5,
-  },
-
-  buttonText: {
-    color: "#f6e1ffff",
-    fontSize: 12,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-
-  inLineText: {
-    textAlign: "center",
-    textDecorationLine: "underline",
-    color: "#6A3093"
-  },
-
-})
+      <Stack.Screen
+        name="dashboard"
+        component={TabNavigator}
+      />
+    </Stack.Navigator>
+  );
+}
