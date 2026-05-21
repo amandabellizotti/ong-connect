@@ -7,8 +7,9 @@ import {
     Image,
     ActivityIndicator,
     Dimensions,
-    TouchableOpacity,
-    Alert,
+    Button,
+
+    Modal
 } from 'react-native';
 
 import { CompositeScreenProps } from '@react-navigation/native';
@@ -65,24 +66,27 @@ const ongs: ONG[] = [
 
 // COMPONENTE SEPARADO
 function ONGCard({ ong }: { ong: ONG }) {
-   
-    const mostrarDetalhes = () => {
-        Alert.alert(
-            ong.nome,
-            ong.descricao,
-            [{ text: 'Fechar' }]
-        );
-    };
-    
-    return (
-        <TouchableOpacity style={styles.card} onPress={mostrarDetalhes}>
-            <Image source={ong.imagem} style={styles.imagem} />
+    const [selecionada, setSelecionada] = useState<ONG | null>(null);
 
-            <View style={styles.infoContainer}>
+    return (
+        <View>
+            <View style={styles.cardContainer}>
+                <Image source={ong.imagem} style={styles.cardImage} />
                 <Text style={styles.nome}>{ong.nome}</Text>
                 <Text style={styles.causa}>{ong.causa}</Text>
+                <Button title="Ver detalhes" onPress={() => setSelecionada(ong)} color="#A06AB9" />
             </View>
-        </TouchableOpacity>
+
+            <Modal visible={!!selecionada} transparent animationType="fade">
+                <View style={styles.modalBody}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.title}>{selecionada?.nome}</Text>
+                        <Text style={styles.desc}>{selecionada?.descricao}</Text>
+                        <Button title="Fechar" onPress={() => setSelecionada(null)} color="#A06AB9" />
+                    </View>
+                </View>
+            </Modal>
+        </View>
     );
 }
 
@@ -142,7 +146,6 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         color: '#6A3093',
     },
-
     subtitle: {
         fontSize: 16,
         marginBottom: 20,
@@ -153,32 +156,45 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
 
-    card: {
+    cardContainer: {
         backgroundColor: '#fff',
         borderRadius: 12,
-        marginBottom: 16,
-        overflow: 'hidden',
-        elevation: 3,
-
+        padding: 16,
+        marginBottom: 12,
         shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
+        elevation: 3,
     },
 
-    imagem: {
+    cardImage: {
         width: '100%',
-        height: width * 0.45,
-        resizeMode: 'contain',
-        backgroundColor: '#eee',
+        height: 150,
+        borderRadius: 8,
+        marginBottom: 12,
     },
 
-    infoContainer: {
-        padding: 16,
+    modalBody: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
+
+    modalContent: {
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        padding: 20,
+        width: '80%',
+    },
+
+    desc: {
+        fontSize: 16,
+        marginBottom: 20,
+        color: '#666',
+    },
+
 
     nome: {
         fontSize: 18,

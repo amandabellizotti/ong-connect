@@ -10,6 +10,7 @@ import login from './login';
 import dashboard from './dashboard';
 import perfil from './perfil';
 import explorar from './explorar';
+import Explorar from './explorar';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -69,7 +70,7 @@ function TabNavigator({ route }: any) {
 
       <Tab.Screen
         name="Perfil"
-        component={perfil}
+        component={perfil as any}
         initialParams={{ userName, voluntarioId }}
       />
     </Tab.Navigator>
@@ -91,6 +92,17 @@ export default function App() {
         name="dashboard"
         component={TabNavigator}
       />
+
+      <Stack.Screen
+        name="explorar"
+        component={explorar as any}
+      />
+
+      <Stack.Screen
+        name="perfil"
+        component={perfil as any}
+      />
+    
     </Stack.Navigator>
   );
 }

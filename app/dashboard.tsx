@@ -63,8 +63,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#d4b3e27a",
     },
     title: {
+         textAlign: "center",
+        color: "#6d4688ff",
+        fontWeight: "bold",
         fontSize: 24,
-        marginBottom: 20,
+        marginLeft: 10,
+        marginRight: 10
     },
     topo: {
         marginBottom: 50,

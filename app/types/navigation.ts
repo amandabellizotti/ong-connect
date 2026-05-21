@@ -2,6 +2,7 @@ export type RootStackParamList={
     login: undefined; // Não pede nada
     dashboard: {userName: string; voluntarioId: string }; //Exige ID e nome
     explorar: {userName: string; voluntarioId: string }; //Exige ID e nome
+    perfil: {userName: string; voluntarioId: string }; //Exige ID e nome
 };
 
 // Define os tipos de parâmetros para cada aba do Tab Navigator

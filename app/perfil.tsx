@@ -7,7 +7,7 @@ import {
     StyleSheet,
     Animated,
     ScrollView,
-    Alert,
+    Modal
 } from 'react-native';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
@@ -24,41 +24,20 @@ export default function Perfil({ route, navigation }: Props) {
     const voluntarioId = route.params?.voluntarioId || 'ID-0';
 
     const [interesse, setInteresse] = useState('Nenhum definido');
+    const [modalVisible, setModalVisible] = useState(false);
 
     const editarInteresses = () => {
-        Alert.alert(
-            'Escolha uma causa',
-            'Qual área você prefere ajudar?',
-            [
-                {
-                    text: 'Educação',
-                    onPress: () => setInteresse('Educação'),
-                },
-                {
-                    text: 'Meio Ambiente',
-                    onPress: () => setInteresse('Meio Ambiente'),
-                },
-                {
-                    text: 'Saúde',
-                    onPress: () => setInteresse('Saúde'),
-                },
-                {
-                    text: 'Cancelar',
-                    style: 'cancel',
-                },
-            ]
-        );
+        setModalVisible(true);
     };
 
-    const handleLogout = () => {
-        Alert.alert('Sair', 'Tem certeza que deseja sair?', [
-            { text: 'Cancelar', style: 'cancel' },
-            { text: 'Sair', style: 'destructive', onPress: () => navigation.reset({ index: 0, routes: [{ name: 'Login' as any }], }) },
-        ]);
-    };
+    const selecionarInteresse = (valor: string) => {
+        setInteresse(valor);
+        setModalVisible(false);
+    }
+
+    
 
     return (
-
 
         <View style={styles.container}>
             <Text style={styles.title}>Perfil de {userName}</Text>
@@ -79,9 +58,47 @@ export default function Perfil({ route, navigation }: Props) {
                 </Text>
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <TouchableOpacity style={styles.logoutButton} >
                 <Text style={styles.logoutButtonText}>Sair</Text>
             </TouchableOpacity>
+
+            <Modal visible={modalVisible}
+                transparent
+                animationType='slide'
+
+            >
+                <View style={styles.modalContainer}>
+                    <Text style={styles.modalTitle}>Escolha uma causa</Text>
+                    
+                    <TouchableOpacity
+                        style={styles.modalButton}
+                        onPress={() => selecionarInteresse('Educação')}
+                    >
+                        <Text style={styles.modalButtonText}>Educação</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity
+                        style={styles.modalButton}
+                        onPress={() => selecionarInteresse('Meio Ambiente')}
+                    >
+                        <Text style={styles.modalButtonText}>Meio Ambiente</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity
+                        style={styles.modalButton}
+                        onPress={() => selecionarInteresse('Saúde')}
+                    >
+                        <Text style={styles.modalButtonText}>Saúde</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.fecharButton}
+                        onPress={() => setModalVisible(false)}
+                    >
+                        <Text style={styles.fecharButtonText}>Fechar</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -115,10 +132,22 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 10,
     },
-    logoutButton: {
-        backgroundColor: '#ff4d4d',
+    editButton: {
+        backgroundColor: '#6A3093',
         paddingVertical: 10,
-        paddingHorizontal: 30,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        marginBottom: 15,
+    },
+    editButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    logoutButton: {
+        backgroundColor: '#A06AB9',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
         borderRadius: 5,
     },
     logoutButtonText: {
@@ -126,25 +155,39 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-    editButton: {
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        
+        
+        backgroundColor: '#c38adeff',
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+   
+    modalButton: {
+        backgroundColor: '#6A3093',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        marginBottom: 15,
+    },
+    modalButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    fecharButton: {
         backgroundColor: '#A06AB9',
         paddingVertical: 10,
-        paddingHorizontal: 30,
-        borderRadius: 8,
-        marginBottom: 15,
-
-        elevation: 4,
-
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
+        paddingHorizontal: 20,
+        borderRadius: 5,
     },
-
-    editButtonText: {
+    fecharButtonText: {
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
